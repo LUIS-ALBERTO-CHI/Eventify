@@ -1,27 +1,84 @@
 <template>
-  <div class="home-page">
-    <main class="main-content">
-      <section class="events">
-        <h2 class="p-text-center">Próximos Eventos</h2>
-        <div class="event-list">
-          <EventCard v-for="event in events" :event="event" :key="event.id" style="width: 300px" />
-        </div>
-      </section>
-    </main>
-  </div>
+  <div id="map" style="height: 180px"></div>
+  <Dialog
+    modal
+    header="Detalles del Evento"
+    :closable="true"
+    :close-on-escape="true"
+    v-model:visible="visible"
+  >
+    <h2 class="text-md font-semibold">{{ selectedEvent.name }}</h2>
+    <div class="flex flex-row gap-2">
+      <Chip icon="pi pi-user " :label="selectedEvent.guest" />
+      <Chip icon="pi pi-clock" :label="selectedEvent.dateTime" />
+    </div>
+
+    <template #footer>
+      <Button
+        @click="
+          () => {
+            toggleVisible()
+          }
+        "
+        class="p-button-text"
+        label="Cancel"
+      />
+      <Button
+        @click="
+          () => {
+            toggleVisible()
+          }
+        "
+        class="p-button-text"
+        label="Save"
+      />
+    </template>
+  </Dialog>
+  <main class="main-content">
+    <section class="events">
+      <h2 class="p-text-center pt-2 pb-4 font-bold text-3xl">Próximos Eventos</h2>
+      <div class="grid gap-2">
+        <EventCard
+          :onAccept="
+            (data) => {
+              console.log(data)
+              this.selectedEvent = data
+              toggleVisible()
+            }
+          "
+          class=""
+          v-for="event in events"
+          :eventData="event"
+          :key="event.id"
+          style="width: 300px"
+        />
+      </div>
+    </section>
+  </main>
 </template>
 
 <script>
 //import Card from 'primevue/card'
 import EventCard from '@/components/EventCard.vue'
+import Dialog from 'primevue/dialog'
+import Chip from 'primevue/chip'
 
 export default {
   components: {
-    EventCard
+    EventCard,
+    Dialog,
+    Chip
   },
   data() {
     return {
-      events: []
+      visible: false,
+      events: [],
+      selectedEvent: null
+    }
+  },
+  methods: {
+    toggleVisible() {
+      this.visible = !this.visible
     }
   },
   mounted() {
@@ -33,25 +90,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.home-page {
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.main-content {
-  padding: 20px;
-}
-
-.event-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-.events {
-  margin-bottom: 40px;
-}
-</style>
