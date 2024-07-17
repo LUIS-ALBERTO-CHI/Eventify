@@ -30,14 +30,13 @@ import MyButton from 'primevue/button'
 export default {
   components: {
     Card,
-    // eslint-disable-next-line vue/no-reserved-component-names
     MyButton
   },
   emits: ['click'],
 
   computed: {
     dateTime() {
-      return new Date(this.eventData.dateTime).toLocaleString()
+      return new Date(this.eventData.datetime).toLocaleString()
     }
   },
   props: ['eventData', 'onAccept']
